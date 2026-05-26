@@ -6,21 +6,21 @@
 
 // ======================= STRUCTS =======================
 
-typedef struct {
+struct Produto {
     int idProduto;
     char nome[50];
     float preco;
     int quantidade;
-} Produto;
+};
 
-typedef struct {
+struct Venda {
     int idVenda;
     char cliente[50];
     int qtdProdutos;
     int idsProdutos[MAX_ITENS];
-} Venda;
+};
 
-// ======================= FUNÇÕES PRODUTOS =======================
+// ======================= FUNÃ‡Ã•ES PRODUTOS =======================
 
 void cadastrarProduto() {
 
@@ -31,7 +31,7 @@ void cadastrarProduto() {
         return;
     }
 
-    Produto p;
+    struct Produto p;
 
     printf("\nID do Produto: ");
     scanf("%d", &p.idProduto);
@@ -48,7 +48,7 @@ void cadastrarProduto() {
     printf("Quantidade em estoque: ");
     scanf("%d", &p.quantidade);
 
-    fwrite(&p, sizeof(Produto), 1, fp);
+    fwrite(&p, sizeof(struct Produto), 1, fp);
 
     fclose(fp);
 
@@ -64,11 +64,11 @@ void listarProdutos() {
         return;
     }
 
-    Produto p;
+    struct Produto p;
 
     printf("\n===== PRODUTOS =====\n");
 
-    while (fread(&p, sizeof(Produto), 1, fp)) {
+    while (fread(&p, sizeof(struct Produto), 1, fp)) {
 
         printf("\nID: %d\n", p.idProduto);
         printf("Nome: %s\n", p.nome);
@@ -79,7 +79,7 @@ void listarProdutos() {
     fclose(fp);
 }
 
-void buscarProdutoPorID(int id, Produto *produto, int *encontrado) {
+void buscarProdutoPorID(int id, struct Produto *produto, int *encontrado) {
 
     FILE *fp = fopen("produtos.dat", "rb");
 
@@ -89,9 +89,9 @@ void buscarProdutoPorID(int id, Produto *produto, int *encontrado) {
         return;
     }
 
-    Produto p;
+    struct Produto p;
 
-    while (fread(&p, sizeof(Produto), 1, fp)) {
+    while (fread(&p, sizeof(struct Produto), 1, fp)) {
 
         if (p.idProduto == id) {
 
@@ -114,12 +114,12 @@ void atualizarProduto() {
     }
 
     int id;
-    Produto p;
+    struct Produto p;
 
     printf("Digite o ID do produto: ");
     scanf("%d", &id);
 
-    while (fread(&p, sizeof(Produto), 1, fp)) {
+    while (fread(&p, sizeof(struct Produto), 1, fp)) {
 
         if (p.idProduto == id) {
 
@@ -135,9 +135,9 @@ void atualizarProduto() {
             printf("Nova quantidade: ");
             scanf("%d", &p.quantidade);
 
-            fseek(fp, -sizeof(Produto), SEEK_CUR);
+            fseek(fp, -sizeof(struct Produto), SEEK_CUR);
 
-            fwrite(&p, sizeof(Produto), 1, fp);
+            fwrite(&p, sizeof(struct Produto), 1, fp);
 
             printf("Produto atualizado!\n");
 
@@ -162,16 +162,16 @@ void removerProduto() {
     }
 
     int id;
-    Produto p;
+    struct Produto p;
 
     printf("Digite o ID do produto para remover: ");
     scanf("%d", &id);
 
-    while (fread(&p, sizeof(Produto), 1, fp)) {
+    while (fread(&p, sizeof(struct Produto), 1, fp)) {
 
         if (p.idProduto != id) {
 
-            fwrite(&p, sizeof(Produto), 1, temp);
+            fwrite(&p, sizeof(struct Produto), 1, temp);
         }
     }
 
@@ -184,7 +184,7 @@ void removerProduto() {
     printf("Produto removido!\n");
 }
 
-// ======================= FUNÇÕES VENDAS =======================
+// ======================= FUNÃ‡Ã•ES VENDAS =======================
 
 void cadastrarVenda() {
 
@@ -195,7 +195,7 @@ void cadastrarVenda() {
         return;
     }
 
-    Venda v;
+    struct Venda v;
 
     int i;
 
@@ -224,7 +224,7 @@ void cadastrarVenda() {
         scanf("%d", &v.idsProdutos[i]);
     }
 
-    fwrite(&v, sizeof(Venda), 1, fv);
+    fwrite(&v, sizeof(struct Venda), 1, fv);
 
     fclose(fv);
 
@@ -240,15 +240,15 @@ void listarVendas() {
         return;
     }
 
-    Venda v;
-    Produto p;
+    struct Venda v;
+    struct Produto p;
 
     int encontrado;
     int i;
 
     printf("\n===== VENDAS =====\n");
 
-    while (fread(&v, sizeof(Venda), 1, fv)) {
+    while (fread(&v, sizeof(struct Venda), 1, fv)) {
 
         printf("\nID Venda: %d\n", v.idVenda);
         printf("Cliente: %s\n", v.cliente);
@@ -285,12 +285,12 @@ void atualizarVenda() {
     int id;
     int i;
 
-    Venda v;
+    struct Venda v;
 
     printf("Digite o ID da venda: ");
     scanf("%d", &id);
 
-    while (fread(&v, sizeof(Venda), 1, fv)) {
+    while (fread(&v, sizeof(struct Venda), 1, fv)) {
 
         if (v.idVenda == id) {
 
@@ -309,9 +309,9 @@ void atualizarVenda() {
                 scanf("%d", &v.idsProdutos[i]);
             }
 
-            fseek(fv, -sizeof(Venda), SEEK_CUR);
+            fseek(fv, -sizeof(struct Venda), SEEK_CUR);
 
-            fwrite(&v, sizeof(Venda), 1, fv);
+            fwrite(&v, sizeof(struct Venda), 1, fv);
 
             printf("Venda atualizada!\n");
 
@@ -337,16 +337,16 @@ void removerVenda() {
 
     int id;
 
-    Venda v;
+    struct Venda v;
 
     printf("Digite o ID da venda para remover: ");
     scanf("%d", &id);
 
-    while (fread(&v, sizeof(Venda), 1, fv)) {
+    while (fread(&v, sizeof(struct Venda), 1, fv)) {
 
         if (v.idVenda != id) {
 
-            fwrite(&v, sizeof(Venda), 1, temp);
+            fwrite(&v, sizeof(struct Venda), 1, temp);
         }
     }
 
